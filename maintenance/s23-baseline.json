@@ -27,7 +27,13 @@
         "upstream_commit": "8fa2f68c39119eeea46f059057fecc5f371ee427",
         "method": "merge-preserving-s23-customizations",
         "adopted_on": "2026-11-10",
-        "record": "docs/upstream/2026-11-10-v0.2.4-merge.zh.md"
+        "record": "docs/upstream/2026-11-10-v0.2.4-merge.zh.md",
+        "validation": {
+          "source": "c414e0c8adc1f7129ee69e98506f4f84d33b4af0",
+          "ci_run": "https://github.com/Lovest20018/GhostSam/actions/runs/42739046856",
+          "result": "success",
+          "device_validation": "pending"
+        }
       }
     ],
     "tracking_ref": "refs/remotes/upstream/main",

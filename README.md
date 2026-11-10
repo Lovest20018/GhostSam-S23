@@ -57,7 +57,7 @@ loaded driver when testing an updated build.
 | --- | --- |
 | r2 | Previously published test APK; see the release notes for installation details |
 | r3 (`0.2.3-s23-uapi5-r3`, build 63) | [Published test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3); includes the revised home states and authorization hints; CI build and checks passed |
-| `0.3.0-dev` (build 64) | Current development source; merged upstream v0.2.4 and matching KernelSU changes, with firmware and exact kernel matching removed; not a published release |
+| `0.3.0-dev` (build 64) | Merged upstream v0.2.4 and matching KernelSU changes, with firmware and exact kernel matching removed; [complete CI test build passed](https://github.com/Lovest20018/GhostSam/actions/runs/42739046856); not a published release |
 
 The r3 home card distinguishes checking, manager missing, ready, running,
 loaded but awaiting su access, and enabled. These changes require a new APK;
