@@ -2,12 +2,11 @@
 
 更新日期：2026-11-10。
 
-本文描述独立维护的 S23 产品主线 `main`。本次发布源码为 `0.3.0`（build 66），
+本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.1-dev`（build 67），
 独立产品版本与发布规则见 [S23-product-and-releases.zh.md](S23-product-and-releases.zh.md)。
-最新已发布版本仍是 `0.2.3-s23-uapi5-r3`（build 63）。
-[r3 测试版](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-ksu-3.3.1-r3)
-已由 [Actions #6](https://github.com/Lovest20018/GhostSam-S23/actions/runs/38679062368)
-完整构建并发布，源码为 `14f1343`；r3 真机验证尚未进行。
+最新正式 Release 为 [0.3.0（build 66）](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)，
+源码 `8ead9c0`，由 [完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42748731886) 构建和校验。
+用户真机反馈覆盖此前 build 65 的 root 和重开状态；正式 APK 的验证范围见发布说明。
 
 仓库中英文首页均以 **GhostSam S23** 为项目展示名，介绍 S23 的目标固件、
 授权流程和构建方式；应用显示名和首页标题也使用此名称。
@@ -199,3 +198,18 @@ S23 使用独立的 `ic_s23_launcher` 自适应图标，保留小幽灵造型，
 与薄荷白主体。图形位于自适应安全区域内，眼睛采用透明镂空，单色主题中仍能辨认。
 圆角方形、圆形与单色预览，以及 64/48/32 像素显示效果已检查。
 Gradle 通过 manifest 占位符仅为 S23 选择新图标，通用构建继续使用原图标。
+
+## 0.3.0 正式 Release 校验
+
+2026-11-10，仓库更名为 `Lovest20018/GhostSam-S23`，应用显示名称为
+GhostSam S23，包名保持 `com.snothin.ghostsam.s23`。
+发布提交和 GitHub Release 的发布者均为 `Lovest20018`。
+
+- 标签：`s23-v0.3.0`，源码 `8ead9c04412201310382108c2d8fd2a8bfababea`。
+- [完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42748731886) 的版本、驱动、ksud、APK 和发布任务均通过。
+- Release 已公开，`draft=false`、`prerelease=false`，并核对为 GitHub Latest。
+- 下载后再次验证三个附件的大小、GitHub SHA-256 与 `SHA256SUMS`，
+  核对包名、0.3.0 / build 66、签名和两个载荷与构建输入一致。
+- APK SHA-256：`a1d9372ebce8e2e52090d8fe9916a35bc183211a0d08d48f9a455490f4ea43db`。
+
+发布后 `main` 进入下一开发版本 `0.3.1-dev`（build 67），不会改变已发布附件。

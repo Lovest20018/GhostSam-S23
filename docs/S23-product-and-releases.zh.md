@@ -11,13 +11,13 @@ GhostSam S23 按目标 S23 固件的使用需求、验证结果和维护进度�
 - 产品名：GhostSam S23；包名：`com.snothin.ghostsam.s23`。
 - 主线：`main`；默认 Gradle 构建为 S23，原有通用构建需显式 `-Ps23Only=false`。
 - 版本唯一来源：`app/s23-version.properties`，不继承 `app/version.properties`。
-- 本次发布版本：`0.3.0`，`versionCode=66`，基于用户已验证的 build 65。
+- 当前开发版：`0.3.1-dev`，`versionCode=67`；正式版 `0.3.0`（build 66）基于用户已验证的 build 65。
 - 当前开发源码不再精确匹配固件或完整内核版本，Android 要求为 SDK ≥ 36；
   仍检查 SM-S9110、`android13-5.15` KMI 和运行前兼容条件。
   FZJ1 已收到 build 64 获取 root 成功的反馈，但存在重开应用后首页状态复位的问题，
   build 65 修复后，用户已于 2026-11-10 反馈 root 及重开状态正常；One UI 9 未验证。
   已发布 r3 仍保留旧版限制。
-- 最新已发布：r3，`0.2.3-s23-uapi5-r3`，build 63，原下载链接继续使用。
+- 最新已发布：[0.3.0（build 66）](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)，正式 Release；历史 r2/r3 附件继续保留。
 - `versionCode` 由维护者随可分发更新显式递增，必须高于最新已发布版本。
   构建、测试和重跑 CI 均不修改版本文件。
 - 标签为 `s23-v<versionName>`，例如候选版本 `0.3.0-rc.1` 对应

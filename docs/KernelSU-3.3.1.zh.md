@@ -80,16 +80,16 @@ APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
    `GhostSam-S23.apk`、构建信息和 `SHA256SUMS`。
    在解压目录执行 `sha256sum -c SHA256SUMS` 核对文件。
    `main` 推送、PR 和手动构建只生成 `ghostsam-s23-apk` artifact。
-   新版按 `s23-v<versionName>` 标签独立发布测试版；详见
+   新版按 `s23-v<versionName>` 标签独立发布正式或候选版本；详见
    [产品与发布规则](S23-product-and-releases.zh.md)。历史 r2/r3 不重发。
 
-本次发布源码为 `0.3.0`（build 66），独立维护产品与发布流程，
+最新正式版为 `0.3.0`（build 66），当前主线为 `0.3.1-dev`（build 67），独立维护产品与发布流程，
 并已移除固件与完整内核精确匹配、合并 v0.2.4 的 DirtyFrag 和新版 KernelSU。
 组件来源与验证范围见[合并记录](upstream/2026-11-10-v0.2.4-merge.zh.md)。
 build 65 修复退出应用后首页状态恢复，说明见[首页状态维护记录](Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65)。
-最新已发布的 [r3 测试版](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-ksu-3.3.1-r3)
-已从 `14f1343` 完整构建并发布，CI 构建、测试、包名与版本、载荷和签名检查通过。
-r3 APK 尚未进行真机验证；当前开发源码尚未发布。
+[0.3.0 正式 Release](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)
+已从 `8ead9c0` 完整构建并发布，CI 构建、测试、包名与版本、载荷和签名检查通过。
+该包使用新的 CI debug 签名；此前真机反馈对应 build 65，范围见发布说明。
 
 APK 是标准 debug 签名的测试版本。工作流验证包名、APK 签名、两个 payload
 与本次构建输入完全一致，以及 arm64 standalone JNI 库存在。
