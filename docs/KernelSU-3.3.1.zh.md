@@ -1,19 +1,32 @@
 # GhostSam S23：KernelSU Manager 3.3.1 兼容修复
 
-本构建只面向用户提供截图中的设备与固件：
+当前开发源码面向以下设备范围，固件编号和完整内核版本不再精确匹配：
 
 | 项目 | 目标 |
 | --- | --- |
 | 机型 | 国行 Galaxy S23，SM-S9110 |
-| 固件 | S9110ZCS8FZI1 |
-| 编译编号 | BP4A.251205.006.S9110ZCS8FZI1 |
-| 系统 | One UI 8.5 / Android 16（SDK 36） |
-| 完整内核版本 | 5.15.189-android13-8-3251900-abS9110ZCS8FZI1 |
+| 固件与编译编号 | 不再作为白名单条件 |
+| 系统 | Android 16 及后续版本（SDK ≥ 36） |
+| 完整内核版本 | 不再精确匹配；保留内核窗口及运行前探测 |
 | KMI | android13-5.15 |
 | 管理器 | 官方 KernelSU Manager 3.3.1 |
 
 Android 系统版本不决定 KMI。该手机升级到 Android 16 后仍使用
 android13-5.15 内核，因此不能打包 android16-6.12 模块。
+
+2026-11-10 用户提供的新设备信息为 One UI 8.5 / Android 16 / 编译编号
+`BP4A.251205.006.S9110ZCS8FZJ1`，完整内核为
+`5.15.189-android13-8-3251900-abS9110ZCS8FZJ1`。
+旧 r3 只接受 FZI1，因此在执行前拒绝这台 FZJ1 设备；该日志不代表漏洞或
+KernelSU 加载已失败。开发源码现已去掉编译编号、完整内核版本和 SDK 上限，
+允许这类更新进入兼容性检查。新日志记录设备实际编译编号、SDK 和安全补丁日期。
+
+本包仍只包含 `android13-5.15` 的 helper 与内嵌 KernelSU 模块；KMI 不同会
+明确报告缺少对应模块。保留内核窗口、页缓存探测和资产检查。
+One UI 9 等后续系统不会仅因系统编号被拒绝，但其内核、漏洞补丁和模块兼容性
+仍需实测；当前 FZJ1 和未来 One UI 9 均未完成这次改动后的真机验证。
+该策略参考 Android 的 [KMI 稳定性说明](https://source.android.com/docs/core/architecture/kernel/stable-kmi)，
+移除字符串白名单不等于不同 KMI 的模块可以互换。
 
 ## 修复内容
 
@@ -51,8 +64,8 @@ Ghostlock 或 KernelSU-Next 切换。无需把 S23 填进原系列表或猜测�
 不是内嵌的 KernelSU 驱动，无需因为这次 UAPI 变化重编译。
 
 APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
-可与原 GhostSam 同时安装。开始执行前核对机型、编译编号、SDK 和完整内核
-版本，不匹配时停止；系统更新后需要重新审查目标信息。
+可与原 GhostSam 同时安装。开始执行前核对机型、最低 SDK、KMI 和运行条件。
+不再因编译编号或完整内核字符串变化而停止；系统更新后的可用性仍需实测。
 
 ## 在 fork 中构建
 
@@ -68,7 +81,8 @@ APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
    新版按 `s23-v<versionName>` 标签独立发布测试版；详见
    [产品与发布规则](S23-product-and-releases.zh.md)。历史 r2/r3 不重发。
 
-当前源码进入 `0.3.0-dev`（build 64），只调整产品与发布维护方式，底层仍固定上述基线。
+当前源码为 `0.3.0-dev`（build 64），独立维护产品与发布流程，
+并已移除固件与完整内核精确匹配；底层驱动、ksud 和 DirtyFrag 仍使用原基线。
 最新已发布的 [r3 测试版](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
 已从 `14f1343` 完整构建并发布，CI 构建、测试、包名与版本、载荷和签名检查通过。
 r3 APK 尚未进行真机验证；当前开发源码尚未发布。

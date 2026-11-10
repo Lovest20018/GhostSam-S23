@@ -16,5 +16,6 @@
     <string name="s23_home_check_grant_hint">If KSU already shows Jailbroken, there is no need to run again. Tap to open KSU, grant GhostSam S23 su access under Superuser, then return to check the status.</string>
     <string name="s23_home_grant_hint">KernelSU is loaded. Tap to grant GhostSam S23 su access under Superuser in KSU, then return. Once enabled, open KSU from Home to use soft reboot.</string>
     <string name="settings_ksud_variant_s23">KernelSU (Manager 3.3.1 · UAPI 5)</string>
-    <string name="s23_target_mismatch">This S23 edition supports only SM-S9110 / S9110ZCS8FZI1 / Android 16 / kernel 5.15.189-android13-8-3251900-abS9110ZCS8FZI1. Device information does not match.</string>
+    <string name="s23_target_mismatch">This S23 edition requires SM-S9110 and Android 16 or later. Device information does not match.</string>
+    <string name="s23_kmi_mismatch">Current kernel KMI: %1$s. This APK bundles modules only for %2$s. Modules matching the new KMI are required.</string>
 </resources>

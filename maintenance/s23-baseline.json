@@ -39,9 +39,19 @@
   },
   "device": {
     "model": "SM-S9110",
-    "build": "BP4A.251205.006.S9110ZCS8FZI1",
-    "sdk": 36,
-    "kernel": "5.15.189-android13-8-3251900-abS9110ZCS8FZI1"
+    "min_sdk": 36,
+    "kmi": "android13-5.15",
+    "firmware_match": "none",
+    "kernel_release_match": "none",
+    "runtime_validation": "required",
+    "reported_device": {
+      "source": "user-screenshot-2026-11-10",
+      "one_ui": "8.5",
+      "build": "BP4A.251205.006.S9110ZCS8FZJ1",
+      "sdk": 36,
+      "kernel": "5.15.189-android13-8-3251900-abS9110ZCS8FZJ1",
+      "device_validation": "pending"
+    }
   },
   "review_prefixes": [
     "app/app/build.gradle.kts",

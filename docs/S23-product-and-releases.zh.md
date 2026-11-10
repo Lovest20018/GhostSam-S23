@@ -12,6 +12,9 @@ GhostSam S23 按目标 S23 固件的使用需求、验证结果和维护进度�
 - 主线：`main`；默认 Gradle 构建为 S23，原有通用构建需显式 `-Ps23Only=false`。
 - 版本唯一来源：`app/s23-version.properties`，不继承 `app/version.properties`。
 - 当前开发版：`0.3.0-dev`，`versionCode=64`。不是已发布 APK。
+- 当前开发源码不再精确匹配固件或完整内核版本，Android 要求为 SDK ≥ 36；
+  仍检查 SM-S9110、`android13-5.15` KMI 和运行前兼容条件。
+  FZJ1 和未来 One UI 9 的真机可用性尚未验证；已发布 r3 仍保留旧版限制。
 - 最新已发布：r3，`0.2.3-s23-uapi5-r3`，build 63，原下载链接继续使用。
 - `versionCode` 由维护者随可分发更新显式递增，必须高于最新已发布版本。
   构建、测试和重跑 CI 均不修改版本文件。

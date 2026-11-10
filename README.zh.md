@@ -2,7 +2,7 @@
 
 **中文** | [English](README.md)
 
-面向国行 **三星 Galaxy S23（SM-S9110，固件 S9110ZCS8FZI1）** 的临时 root
+面向国行 **三星 Galaxy S23（SM-S9110）** 的临时 root
 应用，基于 [snothin/GhostSam](https://github.com/snothin/GhostSam) 适配。
 本 fork 固定使用 DirtyFrag standalone 路径与官方 **KernelSU Manager 3.3.1**，
 配套构建 UAPI 5 驱动和 ksud。
@@ -18,16 +18,18 @@ GhostSam S23 独立维护产品版本和发布节奏，上游变化经过审查�
 | 项目 | 要求 |
 | --- | --- |
 | 机型 | 国行 Galaxy S23，SM-S9110 |
-| 固件 | S9110ZCS8FZI1 |
-| 编译编号 | BP4A.251205.006.S9110ZCS8FZI1 |
-| 系统 | Android 16 / SDK 36 |
-| 完整内核版本 | 5.15.189-android13-8-3251900-abS9110ZCS8FZI1 |
+| 固件与编译编号 | 当前开发源码不再精确匹配 |
+| 系统 | Android 16 及后续版本 / SDK ≥ 36 |
+| 完整内核版本 | 不再精确匹配；保留内核窗口和运行前探测 |
 | KMI | android13-5.15 |
 | 管理器 | 官方 KernelSU Manager 3.3.1 |
 
-应用在执行前核对目标信息，不匹配时停止。这台设备虽然运行 Android 16，
-内核仍为 android13-5.15。其他机型、其他固件，以及上游的 S22 / S26 / Z Fold8
-支持范围，均不能视为本 S23 专用构建的兼容承诺。
+当前开发源码按机型、最低 SDK、KMI 和运行前探测检查兼容性，
+不因 `FZI1`、`FZJ1` 等固件编号或完整内核字符串变化而直接拒绝。
+已发布 r3 仍保留旧版精确匹配，源码修改需要重新构建 APK 才能生效。
+One UI 9 等后续系统不会因系统版本编号被拒绝，但能否获取 root 取决于
+实际内核、补丁和配套模块，尚未完成真机验证。当前 APK 仅包含
+`android13-5.15` 模块；若 KMI 改变，需要重新适配模块。
 
 ## 使用方法
 
@@ -50,7 +52,7 @@ GhostSam S23 独立维护产品版本和发布节奏，上游变化经过审查�
 | --- | --- |
 | r2 | 已发布的测试版 APK，安装注意事项见对应 Release |
 | r3（`0.2.3-s23-uapi5-r3`，build 63） | [已发布测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，包含新的首页状态和授权提示；CI 构建与检查已通过 |
-| `0.3.0-dev`（build 64） | 当前开发源码：独立版本与发布流程；尚未发布安装包 |
+| `0.3.0-dev`（build 64） | 当前开发源码：独立版本与发布流程，移除固件与完整内核精确匹配；尚未发布安装包 |
 
 r3 首页区分正在检测、管理器未安装、准备执行、执行中、已加载待授权、已启用。
 请下载 Release 附件中的 r3 APK 更新手机上的 r2。

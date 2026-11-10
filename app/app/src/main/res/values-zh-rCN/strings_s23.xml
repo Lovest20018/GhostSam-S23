@@ -16,5 +16,6 @@
     <string name="s23_home_check_grant_hint">如果 KSU 已显示“已越狱”，无需再次执行。点击打开 KSU，在“超级用户”中授予 GhostSam S23 su 权限，再返回确认状态。</string>
     <string name="s23_home_grant_hint">KernelSU 已加载。点击打开 KSU，在“超级用户”中授予 GhostSam S23 su 权限后返回。显示“已启用”后，可从首页打开 KSU 进行软重启。</string>
     <string name="settings_ksud_variant_s23">KernelSU（管理器 3.3.1 · UAPI 5）</string>
-    <string name="s23_target_mismatch">此 S23 专用版仅支持 SM-S9110、固件 S9110ZCS8FZI1、Android 16、内核 5.15.189-android13-8-3251900-abS9110ZCS8FZI1。当前设备信息不匹配。</string>
+    <string name="s23_target_mismatch">此 S23 专用版要求 SM-S9110 和 Android 16 及以上版本。当前设备信息不匹配。</string>
+    <string name="s23_kmi_mismatch">当前内核 KMI：%1$s。本安装包仅包含 %2$s 的配套模块，需要适配新 KMI 后才能使用。</string>
 </resources>

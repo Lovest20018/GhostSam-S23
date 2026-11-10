@@ -4,7 +4,7 @@
 
 A Samsung Galaxy S23 temporary root app, adapted from
 [snothin/GhostSam](https://github.com/snothin/GhostSam) for the China-market
-**SM-S9110 on firmware S9110ZCS8FZI1**. This fork uses DirtyFrag standalone
+**SM-S9110**. This fork uses DirtyFrag standalone
 and official **KernelSU Manager 3.3.1**, with matching UAPI 5 components.
 GhostSam S23 maintains its own product versions and release schedule. Upstream
 changes are reviewed and adopted selectively.
@@ -19,17 +19,20 @@ changes are reviewed and adopted selectively.
 | Item | Required value |
 | --- | --- |
 | Device | Galaxy S23, China-market SM-S9110 |
-| Firmware | S9110ZCS8FZI1 |
-| Build | BP4A.251205.006.S9110ZCS8FZI1 |
-| System | Android 16 / SDK 36 |
-| Kernel | 5.15.189-android13-8-3251900-abS9110ZCS8FZI1 |
+| Firmware and build | No exact match in current development source |
+| System | Android 16 or later / SDK ≥ 36 |
+| Kernel release | No exact match; kernel-window and runtime checks remain |
 | KMI | android13-5.15 |
 | Manager | Official KernelSU Manager 3.3.1 |
 
-The app checks the target before running and stops on a mismatch. Android 16
-on this device still uses an android13-5.15 kernel. Support for other models,
-firmware versions, or the upstream S22 / S26 / Z Fold8 targets is outside
-this S23 build's validated scope.
+Current development source checks the model, minimum SDK, KMI, and runtime
+prerequisites. Firmware identifiers such as FZI1 or FZJ1 and exact kernel
+release strings no longer determine acceptance. The published r3 APK still
+uses the old exact match; a rebuilt APK is required for this change.
+Later systems such as One UI 9 are not rejected by version alone, but root
+availability depends on the actual kernel, patches, and matching modules
+and has not been verified on a phone. This APK bundles only android13-5.15
+modules; another KMI requires module adaptation.
 
 ## Using the S23 app
 
@@ -54,7 +57,7 @@ loaded driver when testing an updated build.
 | --- | --- |
 | r2 | Previously published test APK; see the release notes for installation details |
 | r3 (`0.2.3-s23-uapi5-r3`, build 63) | [Published test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3); includes the revised home states and authorization hints; CI build and checks passed |
-| `0.3.0-dev` (build 64) | Current development source; independent versioning and release workflow; not a published release |
+| `0.3.0-dev` (build 64) | Current development source; independent versioning and release workflow, with firmware and exact kernel matching removed; not a published release |
 
 The r3 home card distinguishes checking, manager missing, ready, running,
 loaded but awaiting su access, and enabled. These changes require a new APK;
