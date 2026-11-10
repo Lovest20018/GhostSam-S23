@@ -197,8 +197,6 @@ private fun HomeMiuix(
             if (event == Lifecycle.Event.ON_RESUME) {
                 scope.launch {
                     profiles = withContext(Dispatchers.IO) { PayloadProfileStore(context).load() }
-                    evidence.refreshManager()
-                    evidence.refreshSuOnResume()
                 }
             }
         }

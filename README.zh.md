@@ -52,7 +52,8 @@ One UI 9 等后续系统不会因系统版本编号被拒绝，但能否获取 r
 | --- | --- |
 | r2 | 已发布的测试版 APK，安装注意事项见对应 Release |
 | r3（`0.2.3-s23-uapi5-r3`，build 63） | [已发布测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，包含新的首页状态和授权提示；CI 构建与检查已通过 |
-| `0.3.0-dev`（build 64） | 合并上游 v0.2.4，配套升级 KernelSU，移除固件与完整内核精确匹配；[完整 CI 测试构建已通过](https://github.com/Lovest20018/GhostSam/actions/runs/42739046856)，尚未发布 Release |
+| `0.3.0-dev`（build 65） | 当前开发源码：修复重新打开后回到初始状态，独立检测本地 su，并按本次开机保存模块加载记录；尚未发布 Release |
+| build 64 | 合并上游 v0.2.4，配套升级 KernelSU，移除固件与完整内核精确匹配；[完整 CI 测试构建已通过](https://github.com/Lovest20018/GhostSam/actions/runs/42739046856) |
 
 r3 首页区分正在检测、管理器未安装、准备执行、执行中、已加载待授权、已启用。
 请下载 Release 附件中的 r3 APK 更新手机上的 r2。

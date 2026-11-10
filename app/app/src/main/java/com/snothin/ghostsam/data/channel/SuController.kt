@@ -8,6 +8,9 @@ import kotlinx.coroutines.withContext
  *  unified entry is [ShizukuController.execPrivileged]. */
 object SuController {
 
+    // KernelSU's sucompat intercepts this path even when no su file is visible.
+    private const val SU_PATH = "/system/bin/su"
+
     private const val CACHE_TTL_OK_MILLIS = Long.MAX_VALUE
 
     private const val CACHE_TTL_FAIL_MILLIS = 10_000L
@@ -26,24 +29,29 @@ object SuController {
         cachedAvailable = null
     }
 
-    /** Is su available: `su -c id` answers uid=0; cached process-wide (success forever, failure 10s).
+    /** Is su available: `/system/bin/su -c id` answers uid=0; cached process-wide (success
+     * forever, failure 10s). Foreground checks bypass both cached outcomes.
      *  IO THREADS ONLY (forks su and holds the single-flight lock; main thread = ANR). */
-    fun isAvailable(): Boolean {
+    fun isAvailable(forceRefresh: Boolean = false): Boolean {
         val cached = cachedAvailable
-        if (cached != null) {
+        if (!forceRefresh && cached != null) {
             val ttl = if (cached) CACHE_TTL_OK_MILLIS else CACHE_TTL_FAIL_MILLIS
             if (SystemClock.elapsedRealtime() - cachedAtMillis < ttl) return cached
         }
         synchronized(probeLock) {
             val doubleCheck = cachedAvailable
-            if (doubleCheck != null) {
+            if (!forceRefresh && doubleCheck != null) {
                 val ttl = if (doubleCheck) CACHE_TTL_OK_MILLIS else CACHE_TTL_FAIL_MILLIS
                 if (SystemClock.elapsedRealtime() - cachedAtMillis < ttl) return doubleCheck
             }
             val result = runCatching {
-                val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "id"))
-                val output = collectProcessOutput(process, timeoutMillis = PROBE_TIMEOUT_MILLIS)
-                output.contains("uid=0")
+                val process = Runtime.getRuntime().exec(arrayOf(SU_PATH, "-c", "id"))
+                try {
+                    val output = collectProcessOutput(process, timeoutMillis = PROBE_TIMEOUT_MILLIS)
+                    output.lineSequence().any { it == "uid=0" || it.startsWith("uid=0(") || it.startsWith("uid=0 ") }
+                } finally {
+                    if (process.isAlive) process.destroy()
+                }
             }.getOrDefault(false)
             cachedAvailable = result
             cachedAtMillis = SystemClock.elapsedRealtime()
@@ -56,7 +64,7 @@ object SuController {
         timeoutMillis: Long = 20_000,
     ): String = withContext(Dispatchers.IO) {
         try {
-            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+            val process = Runtime.getRuntime().exec(arrayOf(SU_PATH, "-c", command))
             try {
                 collectProcessOutput(process, timeoutMillis)
             } finally {
@@ -68,6 +76,6 @@ object SuController {
     }
 
     fun spawnShell(): Process? = runCatching {
-        Runtime.getRuntime().exec(arrayOf("su"))
+        Runtime.getRuntime().exec(arrayOf(SU_PATH))
     }.getOrNull()
 }

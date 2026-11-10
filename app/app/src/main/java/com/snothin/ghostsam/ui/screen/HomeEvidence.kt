@@ -1,6 +1,7 @@
 package com.snothin.ghostsam.ui.screen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,14 +32,19 @@ import kotlinx.coroutines.withContext
 internal class HomeEvidence internal constructor(
     private val context: Context,
 ) {
+    private val initialModuleLoaded = KernelSuProbe.isActive() ||
+        ExploitPrefs.isModuleLoadedThisBoot(context) ||
+        (ExploitPrefs.isReceiptVerified(context, ExploitPrefs.currentBootToken()) &&
+            ExploitPrefs.receiptMode(context) != "noksu")
+
     // KernelSU active: file probe + boot receipt (a matching boot_id counts as active across
     // app restarts; expires on reboot).
     var ksuActive by mutableStateOf(
-        KernelSuProbe.isActive() || ExploitPrefs.isReceiptVerified(context, ExploitPrefs.currentBootToken()),
+        initialModuleLoaded || ExploitPrefs.isReceiptVerified(context, ExploitPrefs.currentBootToken()),
     )
         private set
 
-    var moduleActive by mutableStateOf(false)
+    var moduleActive by mutableStateOf(initialModuleLoaded)
         private set
 
     // no-ksu session: receipt mode=noksu without manual upgrade, or su_daemon evidence; the
@@ -66,24 +72,28 @@ internal class HomeEvidence internal constructor(
     var rootInfo by mutableStateOf("")
         private set
 
-    suspend fun refreshSuOnResume() {
-        suAvailable = withContext(Dispatchers.IO) {
-            if (!SuController.isAvailable()) {
-                SuController.invalidateCache()
-                SuController.isAvailable()
-            } else {
-                true
+    suspend fun monitorLocalSu() = monitorHomeRoot(
+        probeSu = { withContext(Dispatchers.IO) { SuController.isAvailable(forceRefresh = true) } },
+        moduleLoaded = {
+            withContext(Dispatchers.IO) {
+                moduleActive || ExploitPrefs.isModuleLoadedThisBoot(context) || KernelSuProbe.isActive()
             }
-        }
-        suProbeDone = true
-        if (suAvailable) {
-            ksuActive = true
-            moduleActive = true
-            noksuSession = false
-            suDenied = false
-            confirmActive()
-        }
-    }
+        },
+        onEvidence = { evidence ->
+            if (!suProbeDone || suAvailable != evidence.suAvailable || moduleActive != evidence.moduleLoaded) {
+                Log.i("GhostSam", "home root: module=${evidence.moduleLoaded}, app_su=${evidence.suAvailable}")
+            }
+            suAvailable = evidence.suAvailable
+            suProbeDone = true
+            if (evidence.moduleLoaded) {
+                ksuActive = true
+                moduleActive = true
+                noksuSession = false
+            }
+            suDenied = evidence.moduleLoaded && !evidence.suAvailable
+            if (ksuActive) confirmActive()
+        },
+    )
 
     suspend fun refreshManager() {
         managerInstalled = withContext(Dispatchers.IO) {
@@ -92,13 +102,6 @@ internal class HomeEvidence internal constructor(
     }
 
     suspend fun pollUntilActive(channelConnected: Boolean) {
-        val suReady = withContext(Dispatchers.IO) { SuController.isAvailable() }
-        suAvailable = suReady
-        suProbeDone = true
-        if (!ksuActive) {
-            ksuActive = suReady
-        }
-        if (suReady) moduleActive = true
         // File probes are unreliable on Samsung builds: once the channel is up, verify the module
         // via shell uid + su uid=0.
         var backoffMs = 1_000L
@@ -137,28 +140,6 @@ internal class HomeEvidence internal constructor(
             }
         }
         confirmActive()
-        // Temporary-session watch: the DFR second stage may load KSU asynchronously (~10s) after the
-        // basic chain; flip to the KernelSU form as soon as local su works.
-        var flipDelay = 3_000L
-        while (noksuSession && !moduleActive) {
-            delay(flipDelay)
-            val suOk = withContext(Dispatchers.IO) {
-                if (SuController.isAvailable()) {
-                    true
-                } else {
-                    SuController.invalidateCache()
-                    SuController.isAvailable()
-                }
-            }
-            if (suOk) {
-                suAvailable = true
-                moduleActive = true
-                noksuSession = false
-                ExploitPrefs.currentBootToken()?.let { ExploitPrefs.storeReceipt(context, it, "ksu") }
-                break
-            }
-            flipDelay = (flipDelay * 2).coerceAtMost(15_000L)
-        }
     }
 
     suspend fun refreshRootInfo() {
@@ -172,8 +153,7 @@ internal class HomeEvidence internal constructor(
             val suffix = if (noksuSession && !moduleActive && !ksudUpgraded) {
                 context.getString(R.string.home_root_tmp_mode)
             } else {
-                val suOk = withContext(Dispatchers.IO) { SuController.isAvailable() }
-                if (suOk) context.getString(R.string.home_root_su_granted)
+                if (suAvailable) context.getString(R.string.home_root_su_granted)
                 else context.getString(R.string.home_root_su_denied)
             }
             "$timeText · $suffix"
@@ -186,6 +166,8 @@ internal class HomeEvidence internal constructor(
     // receipt alone identifies the existing root.
     suspend fun confirmActive() {
         val token = ExploitPrefs.currentBootToken()
+        if (token != null && moduleActive) ExploitPrefs.storeModuleLoaded(context, token)
+        if (!suAvailable && !noksuSession) return
         if (token != null && !ExploitPrefs.isReceiptVerified(context, token)) {
             // Receipt mode follows the live form; a missing/stale file falls back by route (DFR's end
             // state is KSU; a stale noksu once mislabeled an upgraded session).
@@ -238,6 +220,14 @@ internal fun rememberHomeEvidence(channelConnected: Boolean): HomeEvidence {
     // Lifecycle gating: Compose effects do not pause on STOP; keep the loop STARTED-gated
     // (it used to keep running in the background).
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle) {
+        // repeatOnLifecycle also starts when this effect is attached after ON_RESUME.
+        // A callback-only observer can miss that first foreground entry.
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            evidence.refreshManager()
+            evidence.monitorLocalSu()
+        }
+    }
     LaunchedEffect(channelConnected, lifecycle) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             launch { evidence.pollUntilActive(channelConnected) }
