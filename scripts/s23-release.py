@@ -46,7 +46,7 @@ def metadata(root: Path, tag: str | None = None) -> dict[str, str]:
         "version_code": code,
         "release_tag": expected_tag,
         "release_notes": notes,
-        "prerelease": "true",
+        "prerelease": "true" if "-" in name else "false",
     }
 
 

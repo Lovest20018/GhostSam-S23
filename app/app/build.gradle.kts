@@ -51,6 +51,8 @@ android {
         versionName = currentVersionName()
         buildConfigField("boolean", "S23_ONLY", s23Only.toString())
         manifestPlaceholders["appLabel"] = if (s23Only) "GhostSam S23" else "@string/app_name"
+        manifestPlaceholders["launcherIcon"] = if (s23Only) "@mipmap/ic_s23_launcher" else "@mipmap/ic_launcher"
+        manifestPlaceholders["launcherRoundIcon"] = if (s23Only) "@mipmap/ic_s23_launcher_round" else "@mipmap/ic_launcher_round"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {

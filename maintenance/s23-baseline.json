@@ -5,7 +5,7 @@
     "application_id": "com.snothin.ghostsam.s23",
     "version_file": "app/s23-version.properties",
     "tag_prefix": "s23-v",
-    "release_policy": "independent-prereleases",
+    "release_policy": "independent-releases",
     "latest_published": {
       "tag": "s23-ksu-3.3.1-r3",
       "version_name": "0.2.3-s23-uapi5-r3",
@@ -30,7 +30,7 @@
         "record": "docs/upstream/2026-11-10-v0.2.4-merge.zh.md",
         "validation": {
           "source": "c414e0c8adc1f7129ee69e98506f4f84d33b4af0",
-          "ci_run": "https://github.com/Lovest20018/GhostSam/actions/runs/42739046856",
+          "ci_run": "https://github.com/Lovest20018/GhostSam-S23/actions/runs/42739046856",
           "result": "success",
           "device_validation": "user-reported-root-success; home-status-reset-after-reopen"
         }
@@ -69,7 +69,7 @@
         "version_name": "0.3.0-dev",
         "version_code": 65,
         "source": "7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847",
-        "ci_run": "https://github.com/Lovest20018/GhostSam/actions/runs/42744246916",
+        "ci_run": "https://github.com/Lovest20018/GhostSam-S23/actions/runs/42744246916",
         "record": "docs/Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65",
         "coverage": ["root", "home-status-after-reopening"],
         "not_covered": ["One UI 9", "full-reboot-regression"]

@@ -46,6 +46,21 @@ class S23ReleaseTest(unittest.TestCase):
         release.metadata(self.root)
         self.assertEqual((self.root / "app/s23-version.properties").read_bytes(), before)
 
+    def test_stable_version_is_a_full_release(self):
+        self.version("0.3.0", "66")
+        self.write("docs/releases/s23-v0.3.0.zh.md", "S23 stable release\n")
+        result = release.metadata(self.root, "s23-v0.3.0")
+        self.assertEqual(result["prerelease"], "false")
+        self.assertEqual(result["release_tag"], "s23-v0.3.0")
+        self.assertEqual(result["version_code"], "66")
+
+    def test_candidate_versions_remain_prereleases(self):
+        for name in ("0.3.0-alpha.1", "0.3.0-beta.1", "0.3.0-rc.1"):
+            with self.subTest(name=name):
+                self.version(name, "66")
+                self.write(f"docs/releases/s23-v{name}.zh.md", "S23 candidate\n")
+                self.assertEqual(release.metadata(self.root, f"s23-v{name}")["prerelease"], "true")
+
     def test_mismatched_or_legacy_release_tag_is_rejected(self):
         for tag in ("s23-v0.4.0", "s23-ksu-3.3.1-r3", "v0.3.0-rc.1"):
             with self.subTest(tag=tag), self.assertRaisesRegex(ValueError, "must match"):

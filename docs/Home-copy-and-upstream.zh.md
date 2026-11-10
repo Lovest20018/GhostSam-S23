@@ -2,16 +2,16 @@
 
 更新日期：2026-11-10。
 
-本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.0-dev`（build 65），
+本文描述独立维护的 S23 产品主线 `main`。本次发布源码为 `0.3.0`（build 66），
 独立产品版本与发布规则见 [S23-product-and-releases.zh.md](S23-product-and-releases.zh.md)。
 最新已发布版本仍是 `0.2.3-s23-uapi5-r3`（build 63）。
-[r3 测试版](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
-已由 [Actions #6](https://github.com/Lovest20018/GhostSam/actions/runs/38679062368)
+[r3 测试版](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-ksu-3.3.1-r3)
+已由 [Actions #6](https://github.com/Lovest20018/GhostSam-S23/actions/runs/38679062368)
 完整构建并发布，源码为 `14f1343`；r3 真机验证尚未进行。
 
 仓库中英文首页均以 **GhostSam S23** 为项目展示名，介绍 S23 的目标固件、
 授权流程和构建方式；应用显示名和首页标题也使用此名称。
-GitHub 仓库路径为 `Lovest20018/GhostSam`。
+GitHub 仓库路径为 `Lovest20018/GhostSam-S23`。
 
 ## 当前首页
 
@@ -78,7 +78,7 @@ build 65 的处理：
 和 25 项 Python 测试通过。
 
 最终源码 `7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847` 的
-[完整 CI](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916)
+[完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42744246916)
 已通过版本检查、驱动和 ksud 构建、APK 单元测试、打包及签名和载荷校验。
 下载后再次核对 artifact 摘要、`SHA256SUMS`、包名、build 65、APK v2 签名，
 并确认 ksud 与本次构建输入一致、DFR 模块与固定载荷一致。
@@ -111,7 +111,7 @@ APK SHA-256：`b3b3a468ed1c92e82bffabad6d6b82c5a45ba06b24570f012733b35a1efa94f4`
 
 ## 本地分支与基线
 
-- `origin`：用户 fork `Lovest20018/GhostSam`。
+- `origin`：用户 fork `Lovest20018/GhostSam-S23`。
 - `upstream`：原作者仓库 `snothin/GhostSam`。
 - `main`：独立维护的 S23 产品主线，按自己的版本与验证结果发布。
 - `upstream/main`：fetch 刷新的上游引用；`upstream-track` 是此前保留的本地基线分支。
@@ -171,7 +171,8 @@ git switch -c s23/upstream-review
 
 `Build GhostSam S23` 对 `main` 推送、PR 与手动运行执行构建和测试，只产出
 `ghostsam-s23-apk` artifact。新 `s23-v<versionName>` 标签通过版本、发布说明、
-完整构建、载荷与签名检查后发布测试版。开发版本不能发布，历史 r2/r3 不重发。
+完整构建、载荷与签名检查后发布：无后缀版本为正式 Release，候选版本为 prerelease。
+开发版本不能发布，历史 r2/r3 不重发。
 S23 版本取自 `app/s23-version.properties`，构建不修改版本文件。
 
 完整 Android 构建仍需要仓库指定的 JDK 21、SDK 37.0、NDK 30、CMake 及同源
@@ -191,3 +192,10 @@ APK 打包校验测试、上游检查器的隔离 Git 仓库测试，以及 Andr
 
 原工作目录缺失的 `app/app/src/main/assets/payloads/s26/preload.so` 是本轮之前
 已有的删除，保存基线及本轮提交均不包含该删除记录。
+
+## 0.3.0 图标
+
+S23 使用独立的 `ic_s23_launcher` 自适应图标，保留小幽灵造型，采用深墨绿底
+与薄荷白主体。图形位于自适应安全区域内，眼睛采用透明镂空，单色主题中仍能辨认。
+圆角方形、圆形与单色预览，以及 64/48/32 像素显示效果已检查。
+Gradle 通过 manifest 占位符仅为 S23 选择新图标，通用构建继续使用原图标。

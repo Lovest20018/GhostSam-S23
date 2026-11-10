@@ -29,6 +29,7 @@ jobs:
       version_code: ${{ steps.metadata.outputs.version_code }}
       release_tag: ${{ steps.metadata.outputs.release_tag }}
       release_notes: ${{ steps.metadata.outputs.release_notes }}
+      prerelease: ${{ steps.metadata.outputs.prerelease }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -226,7 +227,7 @@ jobs:
           application_id=$S23_APPLICATION_ID
           version_name=$S23_VERSION_NAME
           version_code=$S23_VERSION_CODE
-          release_policy=independent-prereleases
+          release_policy=independent-releases
           ghostsam_revision=$GITHUB_SHA
           kernelsu_repository=$KERNELSU_REPOSITORY
           kernelsu_revision=$KERNELSU_REVISION
@@ -254,7 +255,7 @@ jobs:
           if-no-files-found: error
 
   publish:
-    if: github.repository == 'Lovest20018/GhostSam' && startsWith(github.ref, 'refs/tags/s23-v')
+    if: github.repository == 'Lovest20018/GhostSam-S23' && startsWith(github.ref, 'refs/tags/s23-v')
     needs: [apk, version]
     runs-on: ubuntu-latest
     permissions:
@@ -267,6 +268,8 @@ jobs:
       S23_APPLICATION_ID: ${{ needs.version.outputs.application_id }}
       S23_VERSION_NAME: ${{ needs.version.outputs.version_name }}
       S23_VERSION_CODE: ${{ needs.version.outputs.version_code }}
+      S23_PRERELEASE: ${{ needs.version.outputs.prerelease }}
+      S23_PUBLISHER: Lovest20018
     steps:
       - uses: actions/checkout@v4
         with:
@@ -275,9 +278,9 @@ jobs:
         with:
           name: ghostsam-s23-apk
           path: out
-      - name: Verify and publish the independent S23 test build
+      - name: Verify and publish the independent S23 release
         run: |
-          test "$GITHUB_REPOSITORY" = Lovest20018/GhostSam
+          test "$GITHUB_REPOSITORY" = Lovest20018/GhostSam-S23
           test "$GITHUB_REF_NAME" = "$RELEASE_TAG"
           test "$(gh api "repos/$GITHUB_REPOSITORY/commits/$RELEASE_TAG" --jq '.sha')" = "$GITHUB_SHA"
           (cd out && sha256sum -c SHA256SUMS)
@@ -301,8 +304,14 @@ jobs:
           printf '\n构建来源：https://github.com/%s/actions/runs/%s\n源码提交：`%s`\n' "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$GITHUB_SHA" >> RELEASE-NOTES.md
           release_id=$(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --paginate --jq ".[] | select(.tag_name == \"$RELEASE_TAG\") | .id")
           if [ -z "$release_id" ]; then
+            if [ "$S23_PRERELEASE" = false ]; then
+              echo 'A full release requires a draft created by the repository publisher.' >&2
+              exit 1
+            fi
+            release_flags=(--draft)
+            if [ "$S23_PRERELEASE" = true ]; then release_flags+=(--prerelease); fi
             gh release create "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
-              --target "$GITHUB_SHA" --verify-tag --draft --prerelease \
+              --target "$GITHUB_SHA" --verify-tag "${release_flags[@]}" \
               --title "GhostSam S23 $S23_VERSION_NAME" \
               --notes-file RELEASE-NOTES.md \
               out/GhostSam-S23.apk out/BUILD-INFO.txt out/SHA256SUMS
@@ -318,7 +327,37 @@ jobs:
 
           release = json.load(open("release.json"))
           assert release["tag_name"] == os.environ["RELEASE_TAG"]
-          assert release["prerelease"]
+          assert release["target_commitish"] == os.environ["GITHUB_SHA"]
+          assert release["prerelease"] == (os.environ["S23_PRERELEASE"] == "true")
+          if not release["prerelease"]:
+              assert release["author"]["login"] == os.environ["S23_PUBLISHER"]
+          expected = {p.name: p for p in Path("out").iterdir()}
+          published = {a["name"]: a for a in release["assets"]}
+          assert set(published) <= set(expected)
+          for name, asset in published.items():
+              path = expected[name]
+              assert asset["state"] == "uploaded" and asset["size"] == path.stat().st_size
+              assert asset["digest"] == "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+          missing = sorted(set(expected) - set(published))
+          assert release["draft"] or not missing
+          Path("missing-assets.txt").write_text("".join(name + "\n" for name in missing))
+          PY
+          while IFS= read -r asset; do
+            gh release upload "$RELEASE_TAG" "out/$asset" --repo "$GITHUB_REPOSITORY"
+          done < missing-assets.txt
+          if [ "$(gh api "repos/$GITHUB_REPOSITORY/releases/$release_id" --jq '.draft')" = true ]; then
+            gh release edit "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --notes-file RELEASE-NOTES.md
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/releases/$release_id" > release.json
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+          import os
+
+          release = json.load(open("release.json"))
+          assert release["tag_name"] == os.environ["RELEASE_TAG"]
+          assert release["prerelease"] == (os.environ["S23_PRERELEASE"] == "true")
           assert release["target_commitish"] == os.environ["GITHUB_SHA"]
           published = {a["name"]: a for a in release["assets"]}
           expected = {p.name: p for p in Path("out").iterdir()}
@@ -330,7 +369,10 @@ jobs:
               assert asset["digest"] == digest
               print(name, digest)
           PY
-          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$release_id" -F draft=false > release.json
+          make_latest=false
+          if [ "$S23_PRERELEASE" = false ]; then make_latest=true; fi
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY/releases/$release_id" \
+            -F draft=false -f make_latest="$make_latest" > release.json
           python3 - <<'PY'
           from pathlib import Path
           import json
@@ -338,6 +380,9 @@ jobs:
 
           release = json.load(open("release.json"))
           assert release["tag_name"] == os.environ["RELEASE_TAG"]
-          assert not release["draft"] and release["prerelease"]
+          assert not release["draft"]
+          assert release["prerelease"] == (os.environ["S23_PRERELEASE"] == "true")
+          if not release["prerelease"]:
+              assert release["author"]["login"] == os.environ["S23_PUBLISHER"]
           Path(os.environ["GITHUB_STEP_SUMMARY"]).write_text(f'Published [{os.environ["RELEASE_TAG"]}]({release["html_url"]}) with three verified assets.\n')
           PY
