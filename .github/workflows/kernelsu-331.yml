@@ -17,7 +17,7 @@ defaults:
 
 env:
   KERNELSU_REPOSITORY: snothin/KernelSU
-  KERNELSU_REVISION: abbd7be7fb5e0af607c2a85e02efae03044bba86
+  KERNELSU_REVISION: b086147e79e2725177d960e7161ba279288efc9d
   S23_KMI: android13-5.15
 
 jobs:
@@ -63,7 +63,7 @@ jobs:
           path: KernelSU
           fetch-depth: 0
           persist-credentials: false
-      - name: Restore the audited UAPI 5 contract
+      - name: Validate the native UAPI 5 and Samsung source contract
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE/KernelSU"
           python3 scripts/prepare-kernelsu.py KernelSU
@@ -72,13 +72,13 @@ jobs:
         run: |
           test -d "$KDIR"
           test "$(basename "$KDIR")" = "$S23_KMI"
-          CONFIG_KSU=m CC=clang make CONFIG_KSU_SAMSUNG_KDP=y CONFIG_KSU_SAMSUNG_DEFEX=y CONFIG_KSU_SAMSUNG_RKP=y
+          CONFIG_KSU=m CC=clang make CONFIG_KSU_SAMSUNG_KDP=y CONFIG_KSU_SAMSUNG_DEFEX=y CONFIG_KSU_RKP_NO_PATCH_TEXT=y
           llvm-nm --defined-only kernelsu.ko > samsung-symbols.txt
           python3 - <<'PY'
           from pathlib import Path
 
           symbols = {line.split()[-1] for line in Path("samsung-symbols.txt").read_text().splitlines() if line.split()}
-          required = {"setresuid_kretprobe", "samsung_sucompat_execve_kprobe"}
+          required = {"setresuid_kretprobe", "rkp_sucompat_execve_kprobe"}
           assert required <= symbols, f"Samsung manager fallback was not compiled: {required - symbols}"
           PY
           mkdir -p "$GITHUB_WORKSPACE/modules"
@@ -233,8 +233,8 @@ jobs:
           kmi=$S23_KMI
           dfr_module=tracked helper from ghostsam_revision; unchanged by this workflow
           uapi=5
-          samsung_compat=KDP,DEFEX,RKP
-          manager_observer=upstream-3.3.1-task_work-backport
+          samsung_compat=KDP,DEFEX,RKP_NO_PATCH_TEXT
+          manager_observer=upstream-3.3.1-native-task_work
           manager=3.3.1
           model=SM-S9110
           android_min_sdk=36
@@ -294,8 +294,8 @@ jobs:
               "kernelsu_revision": "KERNELSU_REVISION", "kmi": "S23_KMI",
           }.items():
               assert info[field] == os.environ[variable], field
-          assert info["samsung_compat"] == "KDP,DEFEX,RKP"
-          assert info["manager_observer"] == "upstream-3.3.1-task_work-backport"
+          assert info["samsung_compat"] == "KDP,DEFEX,RKP_NO_PATCH_TEXT"
+          assert info["manager_observer"] == "upstream-3.3.1-native-task_work"
           PY
           cp "$RELEASE_NOTES" RELEASE-NOTES.md
           printf '\n构建来源：https://github.com/%s/actions/runs/%s\n源码提交：`%s`\n' "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" "$GITHUB_SHA" >> RELEASE-NOTES.md

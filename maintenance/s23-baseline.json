@@ -17,12 +17,19 @@
   "ghostsam": {
     "upstream_url": "https://github.com/snothin/GhostSam.git",
     "default_branch": "main",
-    "baseline": "818faef4a278353a22c3481a01a6eaedf8088a3d",
+    "baseline": "8fa2f68c39119eeea46f059057fecc5f371ee427",
     "integration_policy": "selective",
     "reviewed_commit": "8fa2f68c39119eeea46f059057fecc5f371ee427",
-    "reviewed_on": "2026-10-16",
-    "review_log": "docs/upstream/2026-10-16-v0.2.4.zh.md",
-    "adopted_changes": [],
+    "reviewed_on": "2026-11-10",
+    "review_log": "docs/upstream/2026-11-10-v0.2.4-merge.zh.md",
+    "adopted_changes": [
+      {
+        "upstream_commit": "8fa2f68c39119eeea46f059057fecc5f371ee427",
+        "method": "merge-preserving-s23-customizations",
+        "adopted_on": "2026-11-10",
+        "record": "docs/upstream/2026-11-10-v0.2.4-merge.zh.md"
+      }
+    ],
     "tracking_ref": "refs/remotes/upstream/main",
     "tracking_branch": "upstream-track",
     "customization_branch": "main",
@@ -32,7 +39,7 @@
   },
   "kernelsu": {
     "repository": "snothin/KernelSU",
-    "revision": "abbd7be7fb5e0af607c2a85e02efae03044bba86",
+    "revision": "b086147e79e2725177d960e7161ba279288efc9d",
     "uapi": 5,
     "manager": "3.3.1",
     "kmi": "android13-5.15"

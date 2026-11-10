@@ -57,7 +57,7 @@ loaded driver when testing an updated build.
 | --- | --- |
 | r2 | Previously published test APK; see the release notes for installation details |
 | r3 (`0.2.3-s23-uapi5-r3`, build 63) | [Published test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3); includes the revised home states and authorization hints; CI build and checks passed |
-| `0.3.0-dev` (build 64) | Current development source; independent versioning and release workflow, with firmware and exact kernel matching removed; not a published release |
+| `0.3.0-dev` (build 64) | Current development source; merged upstream v0.2.4 and matching KernelSU changes, with firmware and exact kernel matching removed; not a published release |
 
 The r3 home card distinguishes checking, manager missing, ready, running,
 loaded but awaiting su access, and enabled. These changes require a new APK;
@@ -104,11 +104,11 @@ It excludes other KMIs, KernelSU-Next, and the companion APK.
 
 `main` is the independently maintained S23 product branch. Its integrated
 upstream source remains [snothin/GhostSam](https://github.com/snothin/GhostSam), based on
-v0.2.3 (`818faef`). The original toolkit and its device coverage are described
-in the [upstream README](https://github.com/snothin/GhostSam/blob/818faef4a278353a22c3481a01a6eaedf8088a3d/README.md).
-S23 home states and localized copy live in separate files. Upstream v0.2.4
-(`8fa2f68`) was reviewed on 2026-10-16 and has not been adopted; the
-[review record (中文)](docs/upstream/2026-10-16-v0.2.4.zh.md) explains the decision.
+v0.2.4 (`8fa2f68`). The original toolkit and its device coverage are described
+in the [upstream README](https://github.com/snothin/GhostSam/blob/8fa2f68c39119eeea46f059057fecc5f371ee427/README.md).
+S23 home states and localized copy live in separate files. The 2026-11-10 merge
+preserves the S23 package, independent version, UAPI 5 checks, and authorization
+states. See the [integration record (中文)](docs/upstream/2026-11-10-v0.2.4-merge.zh.md).
 
 Check upstream changes from a local checkout with the configured `upstream`
 remote:

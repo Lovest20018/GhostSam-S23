@@ -33,21 +33,22 @@ One UI 9 等后续系统不会仅因系统编号被拒绝，但其内核、漏�
 Manager 3.3.1 要求 UAPI 5，而原 APK 的定制 ksud 及其内嵌 KernelSU
 模块使用 UAPI 2，导致首页显示“需要更新内核”。升级管理器不会替换它们。
 
-构建使用 `snothin/KernelSU` 三星分支提交
-`abbd7be7fb5e0af607c2a85e02efae03044bba86`。已核对该提交的 su 会话 FD、
-EVENT_SERVICES 和 app profile v4 接口；它具有 UAPI 5 的相关行为，但为了
-搭配旧管理器显式把 `KERNEL_SU_UAPI_VERSION` 锁为 2。
+2026-11-10 合并 GhostSam v0.2.4 后，构建固定 `snothin/KernelSU` 的
+`kdp-s26` 分支提交 `b086147e79e2725177d960e7161ba279288efc9d`。
+该提交原生提供 UAPI 5、su 会话 FD、EVENT_SERVICES、app profile v4
+以及 Manager task_work 安装监听，因此不再应用 r3 基线的 UAPI/监听回移补丁。
+旧补丁文件保留用于追溯历史构建。
 
-`scripts/prepare-kernelsu.py` 对这个指定提交恢复 UAPI 5，并回移上游 3.3.1
-的安装监听 task_work 修复。它拒绝其他提交和审查范围外的源码修改，校验
-补丁文件完整内容。随后从同一份头文件重建 ksud 及唯一的
-`android13-5.15_kernelsu.ko`，保留三星 KDP/DEFEX、加载前 staging、加载后
-`finish_install()`。不混用旧驱动或只替换二进制中的版本字符串。
+`scripts/prepare-kernelsu.py` 校验指定提交、工作区与关键源码摘要，拒绝
+其他提交和已修改的受跟踪源码。随后从同一份源码重建 ksud 及唯一的
+`android13-5.15_kernelsu.ko`，保留三星 KDP/DEFEX、预置 daemon 的 staging
+和加载后的 `finish_install()`。DirtyFrag 无预置文件时继续使用其自安装路径。
+新版 ksud 在 late-load 后统一设置分区只读，配套采用上游移除
+`--ro-partitions` 参数后的 helper。
 
-第二个测试版还启用三星 Snapdragon 的 `CONFIG_KSU_SAMSUNG_RKP` 兼容分支。
-原构建只有 KDP/DEFEX；如果系统调用 dispatcher 无法安装，就没有备用
-setresuid hook，官方管理器进程也拿不到 `[ksu_driver]` 接口。RKP 开关在
-dispatcher 不可用时启用已有 kretprobe 备用路径，正常路径仍优先使用。
+新版用 `CONFIG_KSU_RKP_NO_PATCH_TEXT` 取代旧三星 RKP 开关。构建启用
+KDP、DEFEX 和该 RKP 兼容路径，并验证 `setresuid_kretprobe` 与
+`rkp_sucompat_execve_kprobe` 已编译，保留 dispatcher 不可用时的备用 hook。
 是否在目标固件成功注册仍需要真机验证，不能仅凭模块存在判断。
 
 首次日志只记录 native `kernelsu=up`，未记录应用的 `su -c id` 成功，
@@ -61,7 +62,7 @@ dispatcher 不可用时启用已有 kretprobe 备用路径，正常路径仍优�
 专用 APK 使用 DirtyFrag standalone 路径，固定官方 KernelSU，不提供
 Ghostlock 或 KernelSU-Next 切换。无需把 S23 填进原系列表或猜测偏移。
 打包只保留 ksud 和 `dfr_lkm-android13-5.15.ko`；后者是安装辅助模块，
-不是内嵌的 KernelSU 驱动，无需因为这次 UAPI 变化重编译。
+不是内嵌的 KernelSU 驱动；本次合并采用 v0.2.4 的配套 helper。
 
 APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
 可与原 GhostSam 同时安装。开始执行前核对机型、最低 SDK、KMI 和运行条件。
@@ -71,7 +72,7 @@ APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
 
 1. 当前 S23 源码已合入 fork 的 `main`。从 Actions 选择
    **Build GhostSam S23**，在 **Run workflow** 中选择 `main` 手动构建。
-   `main` 的 push 当前不触发自动构建。
+   `main` 的 push 和 PR 也会触发构建。
 2. 工作流依次构建 Samsung KernelSU 模块、嵌入该模块的 ksud、S23 APK。
    APK 构建使用 JDK 21、SDK 37.0、NDK 30.0.16248370 和 CMake 3.22.1。
 3. 成功后下载 `ghostsam-s23-apk` artifact，内含
@@ -82,7 +83,8 @@ APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
    [产品与发布规则](S23-product-and-releases.zh.md)。历史 r2/r3 不重发。
 
 当前源码为 `0.3.0-dev`（build 64），独立维护产品与发布流程，
-并已移除固件与完整内核精确匹配；底层驱动、ksud 和 DirtyFrag 仍使用原基线。
+并已移除固件与完整内核精确匹配、合并 v0.2.4 的 DirtyFrag 和新版 KernelSU。
+组件来源与验证范围见[合并记录](upstream/2026-11-10-v0.2.4-merge.zh.md)。
 最新已发布的 [r3 测试版](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
 已从 `14f1343` 完整构建并发布，CI 构建、测试、包名与版本、载荷和签名检查通过。
 r3 APK 尚未进行真机验证；当前开发源码尚未发布。

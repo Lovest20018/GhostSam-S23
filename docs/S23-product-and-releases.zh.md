@@ -67,16 +67,21 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 
 ## 底层与上游
 
-KernelSU 固定 `abbd7be7fb5e0af607c2a85e02efae03044bba86`，继续应用已有
-UAPI 5 和 Manager 安装监听补丁，并启用 KDP/DEFEX/RKP。此次不变更
-DirtyFrag、helper 或 ksud 产物，不合并 v0.2.4。
+2026-11-10 合并 GhostSam v0.2.4（`8fa2f68`），采用配套的 DirtyFrag core、
+loader 和 helper，删除上游已移除的 companion 流程。S23 APK 仍只打包
+`android13-5.15` helper 与重建的官方 ksud。
+
+KernelSU 固定 `b086147e79e2725177d960e7161ba279288efc9d`，原生提供 UAPI 5
+和 Manager task_work 安装监听，不再应用旧基线的两个回移补丁。构建启用
+KDP、DEFEX 和 `CONFIG_KSU_RKP_NO_PATCH_TEXT`，从同一份源码重建驱动与 ksud。
+详见[合并记录](upstream/2026-11-10-v0.2.4-merge.zh.md)。
 
 `maintenance/s23-baseline.json` 分别记录：
 
-- `baseline`：实际整合的 GhostSam 基线，当前为 v0.2.3 / `818faef`。
+- `baseline`：实际整合的 GhostSam 基线，当前为 v0.2.4 / `8fa2f68`。
 - `reviewed_commit`：最近已完成审查的上游位置，当前为 v0.2.4 / `8fa2f68`。
 - `review_log`：审查结论与候选改动。
-- `adopted_changes`：选择性采用的补丁来源、本地提交与验证记录，当前为空。
+- `adopted_changes`：实际采用的来源与验证记录，包括本次 v0.2.4 合并。
 
-优先完成当前产品验证，再单独评估 DirtyFrag 和新版 KernelSU 的可用修复。
-companion 与其他机型代码精简另开改动，不与底层升级或本次发布流程调整混合。
+合并不改变 S23 产品版本、发布策略和包名。后续仍需完成目标固件的真机回归，
+再准备新的测试版；构建成功本身不构成目标固件已兼容的证据。

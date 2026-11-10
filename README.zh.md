@@ -52,7 +52,7 @@ One UI 9 等后续系统不会因系统版本编号被拒绝，但能否获取 r
 | --- | --- |
 | r2 | 已发布的测试版 APK，安装注意事项见对应 Release |
 | r3（`0.2.3-s23-uapi5-r3`，build 63） | [已发布测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，包含新的首页状态和授权提示；CI 构建与检查已通过 |
-| `0.3.0-dev`（build 64） | 当前开发源码：独立版本与发布流程，移除固件与完整内核精确匹配；尚未发布安装包 |
+| `0.3.0-dev`（build 64） | 当前开发源码：合并上游 v0.2.4，配套升级 KernelSU，移除固件与完整内核精确匹配；尚未发布安装包 |
 
 r3 首页区分正在检测、管理器未安装、准备执行、执行中、已加载待授权、已启用。
 请下载 Release 附件中的 r3 APK 更新手机上的 r2。
@@ -93,11 +93,12 @@ KernelSU-Next 和 companion APK。
 ## 与上游的关系
 
 **`main` 是独立维护的 S23 产品主线**。原项目为
-[snothin/GhostSam](https://github.com/snothin/GhostSam)，当前基于 v0.2.3
-（`818faef`）。上游完整工具包和机型列表见
-[上游原版说明](https://github.com/snothin/GhostSam/blob/818faef4a278353a22c3481a01a6eaedf8088a3d/README.zh.md)。
-S23 首页状态与中英文文案放在独立文件中。2026-10-16 已审查上游 v0.2.4
-（`8fa2f68`），目前未采用，原因见[审查记录](docs/upstream/2026-10-16-v0.2.4.zh.md)。
+[snothin/GhostSam](https://github.com/snothin/GhostSam)，当前基于 v0.2.4
+（`8fa2f68`）。上游完整工具包和机型列表见
+[上游原版说明](https://github.com/snothin/GhostSam/blob/8fa2f68c39119eeea46f059057fecc5f371ee427/README.zh.md)。
+S23 首页状态与中英文文案放在独立文件中。2026-11-10 合并 v0.2.4，
+保留 S23 的包名、独立版本、UAPI 5 校验及授权状态；详见
+[合并记录](docs/upstream/2026-11-10-v0.2.4-merge.zh.md)。
 
 在已配置 `upstream` 远程的本地仓库中检查上游变化：
 
