@@ -25,7 +25,7 @@ KernelSU 加载已失败。开发源码现已去掉编译编号、完整内核�
 明确报告缺少对应模块。保留内核窗口、页缓存探测和资产检查。
 One UI 9 等后续系统不会仅因系统编号被拒绝，但其内核、漏洞补丁和模块兼容性
 仍需实测。用户已反馈 build 64 在 FZJ1 获取 root 正常，但重开后首页状态复位；
-build 65 修复后尚待真机回归，One UI 9 未验证。
+build 65 修复后，用户已于 2026-11-10 反馈 root 及重开状态正常；One UI 9 未验证。
 该策略参考 Android 的 [KMI 稳定性说明](https://source.android.com/docs/core/architecture/kernel/stable-kmi)，
 移除字符串白名单不等于不同 KMI 的模块可以互换。
 

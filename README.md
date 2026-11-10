@@ -9,7 +9,7 @@ and official **KernelSU Manager 3.3.1**, with matching UAPI 5 components.
 GhostSam S23 maintains its own product versions and release schedule. Upstream
 changes are reviewed and adopted selectively.
 
-[Download the latest r3 test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
+[Download the verified build 65 test APK (Actions artifact)](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916)
 · [S23 build details (中文)](docs/KernelSU-3.3.1.zh.md)
 · [Home states and upstream maintenance (中文)](docs/Home-copy-and-upstream.zh.md)
 · [Independent release policy (中文)](docs/S23-product-and-releases.zh.md)
@@ -27,24 +27,34 @@ changes are reviewed and adopted selectively.
 
 Current development source checks the model, minimum SDK, KMI, and runtime
 prerequisites. Firmware identifiers such as FZI1 or FZJ1 and exact kernel
-release strings no longer determine acceptance. The published r3 APK still
-uses the old exact match; a rebuilt APK is required for this change.
+release strings no longer determine acceptance. Build 65 includes these checks;
+the published r3 APK retains the old exact match. On 2026-11-10, the user reported root
+and home-state recovery after reopening working on SM-S9110, One UI 8.5 /
+Android 16, firmware `S9110ZCS8FZJ1`.
 Later systems such as One UI 9 are not rejected by version alone, but root
 availability depends on the actual kernel, patches, and matching modules
-and has not been verified on a phone. This APK bundles only android13-5.15
+and remains unverified on One UI 9. This APK bundles only android13-5.15
 modules; another KMI requires module adaptation.
 
 ## Using the S23 app
 
-1. Install **GhostSam S23** and official **KernelSU Manager 3.3.1**. The S23
-   package is `com.snothin.ghostsam.s23` and can coexist with upstream GhostSam.
+1. Download `ghostsam-s23-apk` from the verified Actions run linked above,
+   extract `GhostSam-S23.apk`, and install it with official **KernelSU Manager 3.3.1**.
+   The S23 package is `com.snothin.ghostsam.s23` and can coexist with upstream GhostSam.
 2. On first use or after a full reboot, open GhostSam S23 and run the temporary
    root flow. This edition uses standalone mode and official KernelSU.
 3. If KSU already shows **Jailbroken**, open KSU and grant **GhostSam S23**
    su access under **Superuser**, then return to the app. A denied su check
    alone does not mean KernelSU needs to be loaded again.
 4. After the app verifies su access, its home card shows **KernelSU enabled**.
-   Open KSU from that card to use the manager's soft reboot action.
+   The app rechecks authorization when reopened or brought to the foreground,
+   and retries failed checks. Open KSU from the card to use the manager's
+   soft reboot action.
+
+Build 65 and build 64 use different CI debug signing keys. To replace build 64,
+uninstall the old test app, install build 65, and grant GhostSam S23 su access
+again in KSU. The phone can keep its existing root; this installation does
+not require running the root flow again.
 
 On the user's target phone, granting GhostSam su access and then opening KSU
 from GhostSam allowed the manager's soft reboot action to work. Temporary
@@ -55,19 +65,21 @@ loaded driver when testing an updated build.
 
 | Version | Status |
 | --- | --- |
-| r2 | Previously published test APK; see the release notes for installation details |
-| r3 (`0.2.3-s23-uapi5-r3`, build 63) | [Published test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3); includes the revised home states and authorization hints; CI build and checks passed |
-| `0.3.0-dev` (build 65) | Current development source; fixes the home status resetting after reopening, retries local su independently, and stores module loading for the current kernel boot; not a published release |
+| `0.3.0-dev` (build 65) | Current `main`; fixes the home status resetting after reopening, retries local su independently, and stores module loading for the current kernel boot; [complete CI passed and APK available](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916); user reported root and reopening working on FZJ1; not a published release |
 | build 64 | Merged upstream v0.2.4 and matching KernelSU changes, with firmware and exact kernel matching removed; [complete CI test build passed](https://github.com/Lovest20018/GhostSam/actions/runs/42739046856) |
+| r3 (`0.2.3-s23-uapi5-r3`, build 63) | [Published test APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3); includes the revised home states and authorization hints; CI build and checks passed |
+| r2 | Previously published test APK; see the release notes for installation details |
 
-The r3 home card distinguishes checking, manager missing, ready, running,
-loaded but awaiting su access, and enabled. These changes require a new APK;
-install the r3 APK from the release assets to update an installed r2 app.
-The package uses this CI run's debug signing key; see the release notes if
-Android reports a signature mismatch. The r3 APK has not been tested on the phone yet.
-
-Build source: [`14f1343`](https://github.com/Lovest20018/GhostSam/commit/14f1343521dba0b3e03d1814daf4ae8d7a065b8d)
-· [Successful Actions run](https://github.com/Lovest20018/GhostSam/actions/runs/38679062368).
+The verified build 65 APK comes from
+[`7fe1fdc`](https://github.com/Lovest20018/GhostSam/commit/7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847).
+Its CI passed unit tests, driver and ksud compilation, APK packaging, payload
+checks, and signature verification. APK SHA-256:
+`b3b3a468ed1c92e82bffabad6d6b82c5a45ba06b24570f012733b35a1efa94f4`.
+The latest published Release remains
+[r3](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3),
+which retains the older firmware restrictions. The current user feedback
+covers root and reopening on the reported FZJ1 phone; it does not establish
+One UI 9 or full reboot coverage. See the [validation record (中文)](docs/Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65).
 
 ## Building
 
@@ -123,7 +135,7 @@ and new commits awaiting review. Review does not imply adoption. Apply selected
 changes on a temporary branch and record their source and validation before
 integrating into `main`. See the [maintenance guide](docs/Home-copy-and-upstream.zh.md).
 KernelSU is pinned separately to `snothin/KernelSU` commit
-`abbd7be7fb5e0af607c2a85e02efae03044bba86`; updating GhostSam does not change
+`b086147e79e2725177d960e7161ba279288efc9d`; updating GhostSam does not change
 that driver baseline automatically.
 
 ## Credits and license

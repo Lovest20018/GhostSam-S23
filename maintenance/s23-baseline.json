@@ -63,7 +63,17 @@
       "build": "BP4A.251205.006.S9110ZCS8FZJ1",
       "sdk": 36,
       "kernel": "5.15.189-android13-8-3251900-abS9110ZCS8FZJ1",
-      "device_validation": "user-reported-build64-root-success; build65-home-reopen-regression-pending"
+      "device_validation": "user-reported-build65-root-and-home-reopen-success",
+      "validation": {
+        "reported_on": "2026-11-10",
+        "version_name": "0.3.0-dev",
+        "version_code": 65,
+        "source": "7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847",
+        "ci_run": "https://github.com/Lovest20018/GhostSam/actions/runs/42744246916",
+        "record": "docs/Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65",
+        "coverage": ["root", "home-status-after-reopening"],
+        "not_covered": ["One UI 9", "full-reboot-regression"]
+      }
     }
   },
   "review_prefixes": [

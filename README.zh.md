@@ -8,7 +8,7 @@
 配套构建 UAPI 5 驱动和 ksud。
 GhostSam S23 独立维护产品版本和发布节奏，上游变化经过审查后按需采用。
 
-[下载最新 r3 测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
+[下载已验证的 build 65 测试版 APK（Actions artifact）](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916)
 · [S23 构建与兼容说明](docs/KernelSU-3.3.1.zh.md)
 · [应用首页与上游维护说明](docs/Home-copy-and-upstream.zh.md)
 · [独立产品与发布规则](docs/S23-product-and-releases.zh.md)
@@ -26,21 +26,29 @@ GhostSam S23 独立维护产品版本和发布节奏，上游变化经过审查�
 
 当前开发源码按机型、最低 SDK、KMI 和运行前探测检查兼容性，
 不因 `FZI1`、`FZJ1` 等固件编号或完整内核字符串变化而直接拒绝。
-已发布 r3 仍保留旧版精确匹配，源码修改需要重新构建 APK 才能生效。
+build 65 已包含上述变更；已发布 r3 仍保留旧版精确匹配。
+2026-11-10，用户在 SM-S9110、One UI 8.5 / Android 16、
+固件 `S9110ZCS8FZJ1` 上反馈：root 及重新打开后的首页状态正常。
 One UI 9 等后续系统不会因系统版本编号被拒绝，但能否获取 root 取决于
-实际内核、补丁和配套模块，尚未完成真机验证。当前 APK 仅包含
+实际内核、补丁和配套模块，One UI 9 尚未完成真机验证。当前 APK 仅包含
 `android13-5.15` 模块；若 KMI 改变，需要重新适配模块。
 
 ## 使用方法
 
-1. 安装 **GhostSam S23** 和官方 **KernelSU Manager 3.3.1**。
+1. 在上方已验证的 Actions 构建页面下载 `ghostsam-s23-apk`，
+   解压得到 `GhostSam-S23.apk`，安装此 APK 和官方 **KernelSU Manager 3.3.1**。
    S23 版包名为 `com.snothin.ghostsam.s23`，可与原版 GhostSam 同时安装。
 2. 首次使用或完整重启后，打开 GhostSam S23，执行获取临时 root。
    S23 版固定使用 standalone 和官方 KernelSU。
 3. 如果 KSU 已显示 **“已越狱”**，先进入 KSU 的 **“超级用户”**，
    授予 **GhostSam S23** su 权限，再返回应用。单次 su 检测失败不能说明需要重新加载。
 4. 应用验证 su 可用后，首页显示 **“KernelSU 已启用”**。
+   重新打开或返回应用时会重新检查授权，检测失败后自动重试。
    从该卡片打开 KSU，再使用管理器中的软重启。
+
+build 65 与 build 64 的 CI debug 签名不同。替换 build 64 时，先卸载旧测试应用，
+安装 build 65 后在 KSU 中重新授予 GhostSam S23 su 权限。
+手机现有 root 可以保留，无需为此次安装再次执行获取 root。
 
 用户已在上述目标设备上反馈：授予 GhostSam su 权限后，从 GhostSam 打开 KSU，
 软重启可以正常使用。临时 root 在完整重启后需要重新获取；测试新版驱动时，
@@ -50,18 +58,19 @@ One UI 9 等后续系统不会因系统版本编号被拒绝，但能否获取 r
 
 | 版本 | 状态 |
 | --- | --- |
-| r2 | 已发布的测试版 APK，安装注意事项见对应 Release |
-| r3（`0.2.3-s23-uapi5-r3`，build 63） | [已发布测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，包含新的首页状态和授权提示；CI 构建与检查已通过 |
-| `0.3.0-dev`（build 65） | 当前开发源码：修复重新打开后回到初始状态，独立检测本地 su，并按本次开机保存模块加载记录；尚未发布 Release |
+| `0.3.0-dev`（build 65） | 当前 `main`：修复重新打开后回到初始状态，独立检测本地 su，并按本次开机保存模块加载记录；[完整 CI 通过，APK 可下载](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916)；用户反馈 FZJ1 上 root 及重开正常；尚未发布 Release |
 | build 64 | 合并上游 v0.2.4，配套升级 KernelSU，移除固件与完整内核精确匹配；[完整 CI 测试构建已通过](https://github.com/Lovest20018/GhostSam/actions/runs/42739046856) |
+| r3（`0.2.3-s23-uapi5-r3`，build 63） | [已发布测试版 APK](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，包含新的首页状态和授权提示；CI 构建与检查已通过 |
+| r2 | 已发布的测试版 APK，安装注意事项见对应 Release |
 
-r3 首页区分正在检测、管理器未安装、准备执行、执行中、已加载待授权、已启用。
-请下载 Release 附件中的 r3 APK 更新手机上的 r2。
-本版使用本次 CI 的 debug 签名，若提示签名冲突，按 Release 安装说明处理。
-r3 APK 尚未进行真机验证。
-
-构建源码：[`14f1343`](https://github.com/Lovest20018/GhostSam/commit/14f1343521dba0b3e03d1814daf4ae8d7a065b8d)
-· [已通过的 Actions 构建](https://github.com/Lovest20018/GhostSam/actions/runs/38679062368)。
+已验证的 build 65 APK 对应源码
+[`7fe1fdc`](https://github.com/Lovest20018/GhostSam/commit/7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847)，
+CI 已通过单元测试、驱动和 ksud 构建、APK 打包、载荷及签名校验。
+APK SHA-256：`b3b3a468ed1c92e82bffabad6d6b82c5a45ba06b24570f012733b35a1efa94f4`。
+最新已发布的 Release 仍为
+[r3](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)，保留旧固件限制。
+本次用户反馈覆盖上述 FZJ1 手机的 root 和应用重开，尚未覆盖 One UI 9 或完整重启回归；
+详见[验证记录](docs/Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65)。
 
 ## 构建
 
@@ -111,7 +120,7 @@ python scripts/check-upstream.py --fetch
 后续在临时分支移植需要的改动，记录来源与验证结果后再整合到 `main`，
 具体步骤见[维护说明](docs/Home-copy-and-upstream.zh.md)。
 KernelSU 单独固定在 `snothin/KernelSU` 的
-`abbd7be7fb5e0af607c2a85e02efae03044bba86`；同步 GhostSam 不会自动升级驱动基线。
+`b086147e79e2725177d960e7161ba279288efc9d`；同步 GhostSam 不会自动升级驱动基线。
 
 ## 致谢与许可
 
