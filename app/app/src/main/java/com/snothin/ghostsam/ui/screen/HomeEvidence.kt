@@ -168,7 +168,8 @@ internal class HomeEvidence internal constructor(
         val token = ExploitPrefs.currentBootToken()
         if (token != null && moduleActive) ExploitPrefs.storeModuleLoaded(context, token)
         if (!suAvailable && !noksuSession) return
-        if (token != null && !ExploitPrefs.isReceiptVerified(context, token)) {
+        if (token != null && (!ExploitPrefs.isReceiptVerified(context, token) ||
+                (moduleActive && ExploitPrefs.receiptMode(context) == "noksu"))) {
             // Receipt mode follows the live form; a missing/stale file falls back by route (DFR's end
             // state is KSU; a stale noksu once mislabeled an upgraded session).
             val state = withContext(Dispatchers.IO) { BootStateFile.read(context) }
