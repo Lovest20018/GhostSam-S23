@@ -1,8 +1,8 @@
 # S23 首页文案与上游同步说明
 
-更新日期：2026-10-16。
+更新日期：2026-11-10。
 
-本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.0-dev`（build 64），
+本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.0-dev`（build 65），
 独立产品版本与发布规则见 [S23-product-and-releases.zh.md](S23-product-and-releases.zh.md)。
 最新已发布版本仍是 `0.2.3-s23-uapi5-r3`（build 63）。
 [r3 测试版](https://github.com/Lovest20018/GhostSam/releases/tag/s23-ksu-3.3.1-r3)
@@ -75,7 +75,18 @@ build 65 的处理：
 
 新增回归测试覆盖无外部通道时重试、加载记录恢复后等待授权、延后加载、
 三星隐藏模块目录、前台重新检测授权、取消和恢复轮询；本地共 17 项 Kotlin
-测试通过。完整 APK 构建结果完成后补充；尚未完成 build 65 的真机回归。
+和 25 项 Python 测试通过。
+
+最终源码 `7fe1fdcbeb306f7f67bf2b0fc46bf7003ffea847` 的
+[完整 CI](https://github.com/Lovest20018/GhostSam/actions/runs/42744246916)
+已通过版本检查、驱动和 ksud 构建、APK 单元测试、打包及签名和载荷校验。
+下载后再次核对 artifact 摘要、`SHA256SUMS`、包名、build 65、APK v2 签名，
+并确认 ksud 与本次构建输入一致、DFR 模块与固定载荷一致。
+APK SHA-256：`b3b3a468ed1c92e82bffabad6d6b82c5a45ba06b24570f012733b35a1efa94f4`。
+
+该包使用本次 CI 生成的 debug 签名，与 build 64 不同。安装前需卸载旧测试应用，
+安装后重新在 KSU 授权 GhostSam S23，再关闭并重开确认首页状态；
+手机现有 root 可以保留，无需为此再次执行获取 root。build 65 的真机重开回归仍待确认。
 
 ## 文件隔离
 
@@ -109,8 +120,9 @@ build 65 的处理：
 `maintenance/s23-baseline.json`。
 
 当前 KernelSU 继续固定为 `snothin/KernelSU` 的
-`abbd7be7fb5e0af607c2a85e02efae03044bba86`，UAPI 5、Manager 3.3.1、
-KMI `android13-5.15`。本轮不升级内核或 ksud。
+`b086147e79e2725177d960e7161ba279288efc9d`，UAPI 5、Manager 3.3.1、
+KMI `android13-5.15`。build 64 合并上游时已同步该版本；build 65 的状态恢复修复
+保留此版本及 build 64 的驱动、ksud 源码和载荷。
 
 ## 后续审查与选择性移植
 

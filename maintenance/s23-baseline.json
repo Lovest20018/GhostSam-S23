@@ -32,7 +32,7 @@
           "source": "c414e0c8adc1f7129ee69e98506f4f84d33b4af0",
           "ci_run": "https://github.com/Lovest20018/GhostSam/actions/runs/42739046856",
           "result": "success",
-          "device_validation": "pending"
+          "device_validation": "user-reported-root-success; home-status-reset-after-reopen"
         }
       }
     ],
@@ -63,7 +63,7 @@
       "build": "BP4A.251205.006.S9110ZCS8FZJ1",
       "sdk": 36,
       "kernel": "5.15.189-android13-8-3251900-abS9110ZCS8FZJ1",
-      "device_validation": "pending"
+      "device_validation": "user-reported-build64-root-success; build65-home-reopen-regression-pending"
     }
   },
   "review_prefixes": [
