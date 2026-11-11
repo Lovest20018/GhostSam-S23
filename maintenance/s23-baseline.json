@@ -7,17 +7,17 @@
     "tag_prefix": "s23-v",
     "release_policy": "independent-releases",
     "latest_published": {
-      "tag": "s23-v0.3.0",
-      "version_name": "0.3.0",
-      "version_code": 66,
-      "source": "8ead9c04412201310382108c2d8fd2a8bfababea",
-      "published_on": "2026-11-10",
+      "tag": "s23-v0.3.1",
+      "version_name": "0.3.1",
+      "version_code": 67,
+      "source": "08b15e621c0a5c13034506873ae51e819efb8c6c",
+      "published_on": "2026-11-11",
       "publisher": "Lovest20018",
-      "release_url": "https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0",
-      "ci_run": "https://github.com/Lovest20018/GhostSam-S23/actions/runs/42748731886",
-      "apk_sha256": "a1d9372ebce8e2e52090d8fe9916a35bc183211a0d08d48f9a455490f4ea43db",
+      "release_url": "https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.1",
+      "ci_run": "https://github.com/Lovest20018/GhostSam-S23/actions/runs/42965364869",
+      "apk_sha256": "faa7e2dd7a7fa86256a7f71172e097009521aaf73b4d6ceab0c3492483a7dbf6",
       "prerelease": false,
-      "device_validation": "inherits-user-reported-build65-root-and-home-reopen-success; release66-apk-not-device-tested"
+      "device_validation": "inherits-user-reported-build65-root-and-home-reopen-success; release67-apk-not-device-tested"
     }
   },
   "ghostsam": {
@@ -46,8 +46,8 @@
     "tracking_branch": "upstream-track",
     "customization_branch": "main",
     "source_checkpoint": "5492115",
-    "known_release_tag": "s23-v0.3.0",
-    "known_release_source": "8ead9c04412201310382108c2d8fd2a8bfababea"
+    "known_release_tag": "s23-v0.3.1",
+    "known_release_source": "08b15e621c0a5c13034506873ae51e819efb8c6c"
   },
   "kernelsu": {
     "repository": "snothin/KernelSU",

@@ -1,11 +1,11 @@
 # S23 首页文案与上游同步说明
 
-更新日期：2026-11-10。
+更新日期：2026-11-11。
 
-本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.1-dev`（build 67），
+本文描述独立维护的 S23 产品主线 `main`。当前开发源码为 `0.3.2-dev`（build 68），
 独立产品版本与发布规则见 [S23-product-and-releases.zh.md](S23-product-and-releases.zh.md)。
-最新正式 Release 为 [0.3.0（build 66）](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)，
-源码 `8ead9c0`，由 [完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42748731886) 构建和校验。
+最新正式 Release 为 [0.3.1（build 67）](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.1)，
+源码 `08b15e6`，由 [完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42965364869) 构建和校验。
 用户真机反馈覆盖此前 build 65 的 root 和重开状态；正式 APK 的验证范围见发布说明。
 
 仓库中英文首页均以 **GhostSam S23** 为项目展示名，介绍 S23 的目标固件、
@@ -213,3 +213,18 @@ GhostSam S23，包名保持 `com.snothin.ghostsam.s23`。
 - APK SHA-256：`a1d9372ebce8e2e52090d8fe9916a35bc183211a0d08d48f9a455490f4ea43db`。
 
 发布后 `main` 进入下一开发版本 `0.3.1-dev`（build 67），不会改变已发布附件。
+
+## 0.3.1 发布重跑修复与校验
+
+2026-11-11 发布 `s23-v0.3.1`（build 67），源码 `08b15e621c0a5c13034506873ae51e819efb8c6c`，发布者 `Lovest20018`。
+
+- 已发布版本重跑只校验，首次发布比较所有正式版本；发布任务串行执行。
+- 37 项 Python 测试（含 10 项新发布回归）和 actionlint 通过。
+  使用 0.3.0 真实元数据运行新发布脚本，确认旧版本直接返回且不调用外部发布接口。
+- [完整 CI](https://github.com/Lovest20018/GhostSam-S23/actions/runs/42965364869) 的版本、驱动、ksud、APK、发布任务全部通过。
+- 下载后核对三个附件摘要、签名、0.3.1 / build 67、包名和载荷；
+  附件与同次 CI artifact 逐字节相同，发布前四个历史 Release 的原有附件与元数据保持不变。
+- APK SHA-256：`faa7e2dd7a7fa86256a7f71172e097009521aaf73b4d6ceab0c3492483a7dbf6`。
+- 应用运行源码与 0.3.0 相同，无新增真机测试。旧标签的工作流不会追溯更新，勿重跑其发布任务。
+
+发布后 `main` 进入 `0.3.2-dev`（build 68）。
