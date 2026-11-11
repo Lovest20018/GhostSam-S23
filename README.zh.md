@@ -7,8 +7,8 @@
 面向国行 **三星 Galaxy S23（SM-S9110）** 的临时 root 应用，
 使用 DirtyFrag standalone 与官方 **KernelSU Manager 3.3.1 / UAPI 5**。
 
-[下载 0.3.0 APK](https://github.com/Lovest20018/GhostSam-S23/releases/download/s23-v0.3.0/GhostSam-S23.apk)
-· [发布说明](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)
+[下载 0.3.1 APK](https://github.com/Lovest20018/GhostSam-S23/releases/download/s23-v0.3.1/GhostSam-S23.apk)
+· [发布说明](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.1)
 
 ## 支持范围
 
@@ -29,11 +29,11 @@
 不同 CI 构建的签名可能不同。若安装提示签名冲突，先保存需要的设置和日志，
 卸载旧 GhostSam S23，安装新版并在 KSU 重新授权；手机现有 root 可以保留。
 
-## 0.3.0 更新
+## 0.3.1 更新
 
-- 修复重新打开后首页状态复位，按本次开机保存模块加载记录。
-- 移除固件及完整内核精确匹配，整合上游 v0.2.4 与配套 KernelSU。
-- 重设计自适应小幽灵图标，支持单色主题。
+- 修复发布重跑和旧草稿覆盖较新 GitHub Latest 的问题。
+- 新增发布回归测试，发布任务串行执行。
+- 保留 0.3.0 的 root 状态恢复、固件兼容策略和新版幽灵图标。
 
 ## 开发与文档
 

@@ -1,6 +1,6 @@
 # GhostSam S23：独立产品与发布规则
 
-生效日期：2026-10-16；2026-11-10 更新正式 Release 策略。
+生效日期：2026-10-16；2026-11-11 更新正式 Release 与重跑策略。
 
 GhostSam S23 按目标 S23 固件的使用需求、验证结果和维护进度独立发布。
 保留 GhostSam 的来源、许可证、Git 历史和上游引用，按需采用上游修复。
@@ -11,7 +11,7 @@ GhostSam S23 按目标 S23 固件的使用需求、验证结果和维护进度�
 - 产品名：GhostSam S23；包名：`com.snothin.ghostsam.s23`。
 - 主线：`main`；默认 Gradle 构建为 S23，原有通用构建需显式 `-Ps23Only=false`。
 - 版本唯一来源：`app/s23-version.properties`，不继承 `app/version.properties`。
-- 当前开发版：`0.3.1-dev`，`versionCode=67`；正式版 `0.3.0`（build 66）基于用户已验证的 build 65。
+- 当前待发布版：`0.3.1`，`versionCode=67`；沿用 0.3.0 的应用逻辑，修复发布流程的 Latest 回退。
 - 当前开发源码不再精确匹配固件或完整内核版本，Android 要求为 SDK ≥ 36；
   仍检查 SM-S9110、`android13-5.15` KMI 和运行前兼容条件。
   FZJ1 已收到 build 64 获取 root 成功的反馈，但存在重开应用后首页状态复位的问题，
@@ -23,7 +23,8 @@ GhostSam S23 按目标 S23 固件的使用需求、验证结果和维护进度�
 - 标签为 `s23-v<versionName>`，例如候选版本 `0.3.0-rc.1` 对应
   `s23-v0.3.0-rc.1`。版本号按本产品维护，不对应 GhostSam 或 KernelSU 版本。
 
-无后缀版本（例如 `0.3.0`）发布为正式 Release，并标记为 GitHub Latest。
+无后缀版本（例如 `0.3.1`）发布为正式 Release；仅高于所有已发布 S23 正式版本时
+标记为 GitHub Latest。已发布版本重跑只核对源码、发布者和附件，不修改 Latest。
 `-alpha.N`、`-beta.N` 和 `-rc.N` 发布为 prerelease；`-dev` 只生成 artifact，
 拒绝发布标签。正式 Release 的设备验证范围仍以发布说明记录为准。
 
@@ -45,7 +46,7 @@ KMI、三星兼容配置及验证范围。历史 r3 artifact 与附件仍使用�
 准备发布时：
 
 1. 记录目标设备的真机反馈和未覆盖的验证范围。
-2. 在 `app/s23-version.properties` 设置正式版本（例如 `0.3.0`）或候选版本；
+2. 在 `app/s23-version.properties` 设置正式版本（例如 `0.3.1`）或候选版本；
    build 高于已发布 APK 及此前分发的开发构建。
 3. 新建对应 `docs/releases/s23-v<versionName>.zh.md`，记录变化、设备范围、
    构建与真机验证结果、安装方式和已知限制。
@@ -61,12 +62,15 @@ KMI、三星兼容配置及验证范围。历史 r3 artifact 与附件仍使用�
 
 ```bash
 python scripts/s23-release.py
-python scripts/s23-release.py --tag s23-v0.3.0
+python scripts/s23-release.py --tag s23-v0.3.1
 python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 第二条仅在版本文件与标签一致且对应发布说明存在时通过。
 发布脚本保留既有 Release 附件的校验，不覆盖已发布文件。
+发布任务串行执行；新草稿通过分页获取全部 Release 后比较数字版本，较旧草稿
+不会替换较新版本的 Latest。查询失败时停止发布，不把网络错误当成没有历史版本。
+此策略从 0.3.1 工作流生效，旧标签与历史 CI 定义不会被追溯修改，勿重跑旧发布任务。
 
 包名继续兼容现有 S23 安装，但当前 CI 使用每次运行生成的 debug 签名；
 版本号递增不消除签名差异。遇到签名冲突时仍按既有安装说明处理。

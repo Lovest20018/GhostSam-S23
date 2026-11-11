@@ -7,8 +7,8 @@
 Temporary root for the China-market **Samsung Galaxy S23 (SM-S9110)**,
 using DirtyFrag standalone and **KernelSU Manager 3.3.1 / UAPI 5**.
 
-[Download 0.3.0 APK](https://github.com/Lovest20018/GhostSam-S23/releases/download/s23-v0.3.0/GhostSam-S23.apk)
-· [Release notes](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.0)
+[Download 0.3.1 APK](https://github.com/Lovest20018/GhostSam-S23/releases/download/s23-v0.3.1/GhostSam-S23.apk)
+· [Release notes](https://github.com/Lovest20018/GhostSam-S23/releases/tag/s23-v0.3.1)
 
 ## Compatibility
 
@@ -30,11 +30,11 @@ CI signing keys differ between builds. If Android reports a signature conflict,
 save any settings or logs you need, uninstall the old GhostSam S23, install the
 new APK, and grant su access again. Existing root can remain active.
 
-## What's new in 0.3.0
+## What's new in 0.3.1
 
-- Fixes the home status resetting after reopening; restores module-loading records for the current boot.
-- Removes exact firmware/kernel matching and integrates upstream v0.2.4 with matching KernelSU components.
-- Adds a redesigned adaptive ghost icon, including themed monochrome support.
+- Fixes release retries and older drafts replacing a newer GitHub Latest release.
+- Adds publication regression tests and serializes release publication.
+- Keeps 0.3.0's root status recovery, firmware compatibility policy, and redesigned ghost icon.
 
 ## Development and documentation
 

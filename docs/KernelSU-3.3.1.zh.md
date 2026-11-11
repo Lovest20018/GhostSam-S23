@@ -83,7 +83,7 @@ APK 显示名称为 **GhostSam S23**，包名为 `com.snothin.ghostsam.s23`，
    新版按 `s23-v<versionName>` 标签独立发布正式或候选版本；详见
    [产品与发布规则](S23-product-and-releases.zh.md)。历史 r2/r3 不重发。
 
-最新正式版为 `0.3.0`（build 66），当前主线为 `0.3.1-dev`（build 67），独立维护产品与发布流程，
+最新正式版为 `0.3.0`（build 66），当前准备发布 `0.3.1`（build 67），独立维护产品与发布流程，
 并已移除固件与完整内核精确匹配、合并 v0.2.4 的 DirtyFrag 和新版 KernelSU。
 组件来源与验证范围见[合并记录](upstream/2026-11-10-v0.2.4-merge.zh.md)。
 build 65 修复退出应用后首页状态恢复，说明见[首页状态维护记录](Home-copy-and-upstream.zh.md#重新打开后的状态恢复build-65)。
